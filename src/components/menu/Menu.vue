@@ -3,10 +3,10 @@
 		<button class="menu-button">
 		    <router-link to="/">Home</router-link>
 		</button>
-		<button class="menu-button">
-		    <router-link to="/about">About</router-link>
-		</button>
-    	<img class='option' src="../../assets/cardapio.svg">
+		<!-- <button class="menu-button">
+		    <router-link to="/about">Documents</router-link>
+		</button> -->
+    	<!-- <img class='option' src="../../assets/cardapio.svg"> -->
   </div>
 </template>
 

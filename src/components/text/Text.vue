@@ -1,7 +1,7 @@
 <template>
   <div id="app-text">
-      <div contenteditable="true" id="text-id" class="app-text content-text">
-      </div>
+      <textarea contenteditable="true" id="text-id" class="app-text content-text" v-model="data">
+      </textarea>
   </div>
 </template>
 
@@ -9,11 +9,18 @@
 export default {
     name: 'AppText',
     async created() {
-        this.doc         = await this.getDocumentDiv();
-        this.doc.oninput = () => this.textInput();
+        this.input  = async () => {
+            if (this.textInput) {
+                return this.textInput();
+            }
+
+            await this.functions.sleep(0.3);
+            return this.input();
+        }
+        this.$parent.$on('add-value', this.newValue);
     },
     data: () => ({
-        doc: null
+        data: ''
     }),
     props: {
         functions: {
@@ -22,37 +29,31 @@ export default {
         }
     },
     methods: {
-        async getDocumentDiv() {
-            let doc = document.getElementById('text-id');
-            if (!doc) {
-                await this.functions.sleep(0.3);
-                return this.getDocumentDiv()
-            };
-            return doc;
+        getDataLen() {
+            return this.data.length;
         },
-        getDocVal() {
-            return this.doc.innerText;
-        },
-        getDocLen() {
-            return this.doc.innerText.length;
-        },
-        getRect() {
-            const { bottom, height, left, right, top, width, x, y } = this.doc.getClientRects()[0];
-            return { bottom, height, left, right, top, width, x, y };
-        },
-        async textInput(event) {
-            let afterLen = this.getDocLen();
+        async textInput() {
+            let afterLen = this.getDataLen();
 
             this.$emit('text-changed', null);            
             if (!afterLen) return true;
             await this.functions.sleep(0.5);
-            let newLen   = this.getDocLen();
+            let newLen   = this.getDataLen();
 
-            let response = await this.functions.sendText(this.getDocVal());
+            let response = await this.functions.sendText(this.data);
             if (!response) return true;
-            let rect     = this.getRect();
+            let rect = document.getElementById('text-id').getClientRects()[0];
             this.$emit('text-changed', { rect: rect, response: response });
             return true;
+        },
+        newValue(opt) {
+            this.data += opt.text;
+            document.getElementById('text-id').focus();
+        }
+    },
+    watch: {
+        data: function () {
+            this.input();
         }
     }
 }

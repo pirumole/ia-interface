@@ -1,5 +1,5 @@
 <template>
-  <div id="app-option">
+  <div id="app-option" v-show="show">
   </div>
 </template>
 
@@ -11,15 +11,18 @@ export default {
             type: Array,
             required: true
         },
-        rect: {
-            type: Object,
-            required: true
-        },
         functions: {
             type: Object,
             required: true
+        },
+        rect: {
+            type: DOMRect,
+            required: true
         }
     },
+    data: () => ({
+        show: false
+    }),
     async created() {
         this.renderButtons();
     },
@@ -32,23 +35,28 @@ export default {
             }
             return doc;
         },
-        async removeButtons() {
+        async removeButtons(button) {
+            const value = ' ' + button.innerText + ' ';
+            var doc = await this.getDocument();
 
+            while(doc.firstChild) {
+                doc.removeChild(doc.firstChild);
+            }
+
+            this.$emit('button-click', { text: value });
         },
         async renderButtons() {
             var doc = await this.getDocument();
-            console.log(this.rect);
 
-            doc.style.width   = `${this.rect.width}`; 
-            doc.style.height  = `50px`;
-            doc.style.bottom  = `5px`;
-            doc.style.left    = `${this.rect.left}`;
-
+            doc.style.left = `${this.rect.left - 5}px`  ;
+            doc.style.width = `${this.rect.width + 10}px`; 
+            this.show = true;
+            var _this = this;
             this.buttons.forEach(function (button) {
                 let _button = document.createElement('div');
                 _button.classList.add('button-text');
                 _button.innerText = button;
-                _button.onclick   = () => this.removeButtons(_button);
+                _button.onclick   = () => _this.removeButtons(_button);
 
                 doc.appendChild(_button);
             });
@@ -59,20 +67,21 @@ export default {
 
 <style>
 #app-option {
-    width: 100%;
+    width: 600px;
+    padding: 2px 0px;
     position: fixed;
     background-color: #cccc;
     z-index: 2;
-    bottom: 50px;
     display: flex;
-    left: auto;
-    right: auto;
+    bottom: 0px;
     opacity: 0.8;
-    justify-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-align: center;
 }
 
 .button-text {
-    margin: auto;
+    margin: auto 5px;
     background-color: #ffffff;
     padding: 5px;
     -webkit-border-radius: 5px;

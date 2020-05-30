@@ -20,14 +20,13 @@ export default {
       sendText : this.sendText,
       sleep    : this.sleep
     }
-    this.io         = socketIo('http://10.0.0.107:8181/');
+    this.io         = socketIo('/');
     window.onresize = () => this.onResize();
     this.authorize();
   },
   data: () => ({
     functions: {},
-    auth: null,
-    url : 'http://10.0.0.107:8181'
+    auth: null
   }),
   methods: {
     OffSet() {
@@ -46,7 +45,7 @@ export default {
       try {
           let response = await axios({
             method: method.toLocaleUpperCase(),
-            url: this.url + url,
+            url: url,
             data: data,
             headers: this.defaultHeader()
           });
@@ -105,6 +104,7 @@ body {
   height: 100%;
   padding: 0%;
   margin: 0%;
+  overflow: hidden;
 }
 
 #app {

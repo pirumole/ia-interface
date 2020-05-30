@@ -3,8 +3,9 @@
     <app-text v-bind:functions="functions" v-on:text-changed="showOptions" />
     <app-option v-if="show" 
       v-bind:buttons="buttons" 
-      v-bind:rect="rect" 
-      v-bind:functions="functions" 
+      v-bind:functions="functions"
+      v-bind:rect="rect"
+      v-on:button-click="newValue"
     />
   </div>
 </template>
@@ -26,10 +27,21 @@ export default {
       required: true
     }
   },
+  created() {
+    this.onResize = async () => {
+      if (this.showOptions) {
+        return this.showOptions(null);
+      }
+
+      await this.functions.sleep(0.5);
+      return this.onResize();
+    };
+    this.$parent.$on('resize', this.onResize);
+  },
   data: () => ({
     show    : false,
     buttons : null,
-    rect    : null,
+    rect    : null
   }),
   methods: {
     showOptions(data) {
@@ -46,6 +58,12 @@ export default {
       this.show     = true;
       this.buttons  = data.response.result.options;
       this.rect     = data.rect;
+    },
+    newValue(opt) {
+      this.show   = false;
+      this.data   = null;
+
+      this.$emit('add-value', opt);
     }
   }
 }

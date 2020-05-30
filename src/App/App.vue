@@ -20,13 +20,14 @@ export default {
       sendText : this.sendText,
       sleep    : this.sleep
     }
-    this.io         = socketIo('/');
+    this.io         = socketIo('http://10.0.0.107:8181/');
     window.onresize = () => this.onResize();
     this.authorize();
   },
   data: () => ({
     functions: {},
-    auth: null
+    auth: null,
+    url : 'http://10.0.0.107:8181'
   }),
   methods: {
     OffSet() {
@@ -45,7 +46,7 @@ export default {
       try {
           let response = await axios({
             method: method.toLocaleUpperCase(),
-            url: url,
+            url: this.url + url,
             data: data,
             headers: this.defaultHeader()
           });
@@ -78,13 +79,19 @@ export default {
       });
     },
     sendText(text) {
+      var _this = this;
       return new Promise((resolve) => {
         this.io.emit('message', { auth: this.auth, text: text }, (err, data) => {
           if (err) {
-            this.renderError(err);
+            _this.renderError(err);
             return resolve(null);
           }
-          return resolve(data);
+
+          if (data.status == 'error' && !data.result.autentication) {
+            _this.authorize();
+            return resolve(null);
+          } else
+            return resolve(data);
         });
       });
     }

@@ -37,6 +37,8 @@ export default {
       this.data   = null;
       this.rect   = null;
 
+      if (data == null) return true;
+
       if (!data.response.result)                return true;
       if (!data.response.result.options)        return true;
       if (!data.response.result.options.length) return true;

@@ -43,6 +43,7 @@ export default {
         async textInput(event) {
             let afterLen = this.getDocLen();
 
+            this.$emit('text-changed', null);            
             if (!afterLen) return true;
             await this.functions.sleep(0.5);
             let newLen   = this.getDocLen();

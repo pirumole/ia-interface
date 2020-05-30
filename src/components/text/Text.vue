@@ -39,6 +39,7 @@ export default {
             if (!afterLen) return true;
             await this.functions.sleep(0.5);
             let newLen   = this.getDataLen();
+            if (afterLen != newLen) return true;
 
             let response = await this.functions.sendText(this.data);
             if (!response) return true;

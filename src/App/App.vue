@@ -111,4 +111,23 @@ body {
   width: 100%;
   height: 100%;
 }
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-button {
+    width: 0px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 20px;
+  border: 3px solid #eeeeee;
+}
+
+*::-webkit-scrollbar-track {
+  background: #bbbbbb;
+}
 </style>

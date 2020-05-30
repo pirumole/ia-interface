@@ -78,7 +78,17 @@ export default {
     overflow-x: auto;
     overflow-y: hidden;
     text-align: center;
+    align-items: center;
+    justify-content: center;
+    scrollbar-width: thin;
+    scrollbar-color: #FFFFFF #cccccc;
 }
+
+/* *::-webkit-scrollbar-track-piece {
+} */
+
+/* *::-webkit-scrollbar-corner {
+} */
 
 .button-text {
     margin: auto 5px;
